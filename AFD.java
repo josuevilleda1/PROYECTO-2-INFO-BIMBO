@@ -52,7 +52,19 @@ public class AFD {
     }
     public boolean accept(String str) {
         // Revisa si la cuerda str es aceptada o no por el AFD
-        return false;
+        int estadoInicial = 0; 
+        for(int i=0; i < str.length();i++){
+        // comparamos letra por letra para irla buscaando 
+            String buscado = String.valueOf(str.charAt(i));
+            //se para en el estado inicial y luego busca la palabra para ver si es cierto
+            if(this.grafo.get(estadoInicial).containsKey(buscado)){
+                // se cambia de estado se ueve al siguiente estado 
+                estadoInicial = this.grafo.get(estadoInicial).get(buscado);
+            } else return false ;
+        }
+        // hace una comparativa entre el estado donde llego si es un estado final para ver si donde llego es un estado final 
+        boolean comprobante = estadosFinales.contains(estadoInicial);
+        return comprobante;
     }
     
     public boolean isMin() {
@@ -79,8 +91,6 @@ public class AFD {
     }
     
     // Implemente los metodos que desee a partir de aqui
-
-    
     /*Metodo utilizado para crear el AFD 
     como funciona utilizando los metodos del tremap usamos par apoder unir los pedasos de la informacion leida 
     como el put

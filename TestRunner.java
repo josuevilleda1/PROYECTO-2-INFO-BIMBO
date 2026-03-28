@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -16,8 +19,8 @@ public class TestRunner {
     private static void mostrarMenu() {
         System.out.println("1) Prueba lectura de AFD");
         System.out.println("2) GRafos creados");
-        System.out.println("3) prueba de estructura del arbol");
-        System.out.println("4) busqueda de arbol");
+        System.out.println("3) busqueda de AFD");
+        System.out.println("4) AFD MIN");
         System.out.println("0) Salir");
     }
 
@@ -37,7 +40,7 @@ public class TestRunner {
         Scanner scanner = new Scanner(System.in);
         int opcion;
         String rutaAFD = "/Users/josuevilleda/Downloads/archivos_base/tests/afds/binary.afd";
-
+        String pareseo = "/Users/josuevilleda/Downloads/archivos_base/tests/strings/binary.txt";
         do {
             limpiarPantalla();
             mostrarEncabezado();
@@ -50,14 +53,12 @@ public class TestRunner {
                 System.out.println("Saliendo...");
                 break; 
             }
-
-            // Variable para usar en los casos sin redeclarar
             AFD pruebaAFD; 
-
             switch (opcion) {
                 case 1:
                     pruebaAFD = new AFD(rutaAFD);
                     ArrayList<String> datos = pruebaAFD.parseo();
+                    System.out.println("--- PRUEBA DE LECTURAS DE ARCHIVOS .AFD ---");
                     System.out.println("abecedario: " + datos.get(0));
                     System.out.println("Numero de estados: " + datos.get(1));
                     System.out.println("Estados Finales: " + datos.get(2));
@@ -68,11 +69,34 @@ public class TestRunner {
                     }
                     pausa(scanner);
                     break;
-
                 case 2:
-                    System.out.println("--- AUDITORÍA DE CONEXIONES INTERNAS (GRAFO) ---");
+                    System.out.println("--- ARAMADO DE AFD ---");
                     pruebaAFD = new AFD(rutaAFD); 
                     pruebaAFD.imprimirEstructuraInterna(); 
+                    pausa(scanner);
+                    break;
+                
+                case 3:
+                    System.out.println("--- PARSEO DE CUERDAS ---");
+                    ArrayList <String> contenido = new ArrayList<>();
+                    pruebaAFD = new AFD(rutaAFD); 
+                    try {
+                        BufferedReader reader = new BufferedReader(new FileReader(pareseo));
+                        String linea;
+                        while ((linea = reader.readLine()) != null) {
+                            contenido.add(linea);
+                        }
+                        reader.close();
+                    } catch (IOException e) {
+                            
+                        }
+                    for(int i = 0; i < contenido.size(); i++){
+                        if((pruebaAFD.accept(contenido.get(i)))){
+                            System.out.println("Cuerdad: " + contenido.get(i) + " Fue aceptada por el AFD" );     
+                        } else {
+                            System.out.println("Cuerdad: " + contenido.get(i) + " No fue aceptada por el AFD" );     
+                        }
+                    }
                     pausa(scanner);
                     break;
                 
