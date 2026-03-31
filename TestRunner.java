@@ -39,8 +39,9 @@ public class TestRunner {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int opcion;
-        String rutaAFD = "/Users/josuevilleda/Downloads/archivos_base/tests/afds/binary.afd";
-        String pareseo = "/Users/josuevilleda/Downloads/archivos_base/tests/strings/binary.txt";
+        String rutaAFD = "/Users/josuevilleda/PROYECTO-2-INFO-BIMBO/tests/afds/2.afd";
+        String pareseo = "/Users/josuevilleda/PROYECTO-2-INFO-BIMBO/tests/strings/2.txt";
+        
         do {
             limpiarPantalla();
             mostrarEncabezado();
@@ -99,6 +100,17 @@ public class TestRunner {
                     }
                     pausa(scanner);
                     break;
+                
+                    case 4: 
+                        System.out.println("--- VERIFICAR SI EL AFD ES MÍNIMO ---");
+                        pruebaAFD = new AFD(rutaAFD);
+                        if (pruebaAFD.isMin()) {
+                            System.out.println("El AFD ES mínimo");
+                        } else {
+                            System.out.println(" El AFD NO es mínimo");
+                        }
+                        pausa(scanner);
+                        break;
                 
                 default:
                     System.out.println("Opción no implementada aún.");

@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class AFD {
     private static final String stringFormat = "Alphabet: %s, Final States: %s, Error States: %s, Minimum: %b";
@@ -66,12 +65,63 @@ public class AFD {
         boolean comprobante = estadosFinales.contains(estadoInicial);
         return comprobante;
     }
-    
-    public boolean isMin() {
-        // Devuelve true si este AFD esta en su forma minima. Falso de lo contrario
-        return false;
+
+        public boolean isMin() {
+
+    int n = grafo.size();
+
+    // 🔹 1. crear grupos iniciales
+    ArrayList<Estados> grupos = new ArrayList<>();
+
+    Estados finales = new Estados();
+    Estados noFinales = new Estados();
+
+    for (int i = 0; i < n; i++) {
+        if (estadosFinales.contains(i)) {
+            finales.grupo.add(i);
+        } else {
+            noFinales.grupo.add(i);
+        }
     }
-    
+    if (!finales.grupo.isEmpty()) grupos.add(finales);
+    if (!noFinales.grupo.isEmpty()) grupos.add(noFinales);
+    boolean cambio = true;
+    while (cambio) {
+        cambio = false;
+        ArrayList<Estados> nuevosGrupos = new ArrayList<>();
+        for (Estados g : grupos) {
+            TreeMap<String, Estados> separaciones = new TreeMap<>();
+            for (int estado : g.grupo) {
+                String firma = "";
+                for (String s : alfabeto) {
+                    int destino = grafo.get(estado).get(s);
+                    int grupoDestino = -1;
+                    for (int k = 0; k < grupos.size(); k++) {
+                        if (grupos.get(k).grupo.contains(destino)) {
+                            grupoDestino = k;
+                            break;
+                        }
+                    }
+                    firma += grupoDestino + ",";
+                }
+                separaciones.putIfAbsent(firma, new Estados());
+                separaciones.get(firma).grupo.add(estado);
+            }
+            nuevosGrupos.addAll(separaciones.values());
+            if (separaciones.size() > 1) {
+                cambio = true;
+            }
+        }
+        grupos = nuevosGrupos;
+    }
+    for (Estados g : grupos) {
+        if (g.grupo.size() > 1) {
+            return false;
+        }
+    }
+
+    return true;
+}
     public String toString() {
         String alphabet = Arrays.toString(this.getAlphabet());
         String finalStates = Arrays.toString(this.getFinalStates());
@@ -79,15 +129,48 @@ public class AFD {
         return String.format(stringFormat, alphabet, finalStates, errorStates, this.isMin());
     }
     private String[] getAlphabet() {
-        return new String[0];
+        return contenido.get(0).split(",");
     }
     
     private int[] getFinalStates() {
-        return new int[0];
+        int[] res = new int[estadosFinales.size()];
+
+        for(int i = 0; i < estadosFinales.size(); i++) {
+        res[i] = estadosFinales.get(i);
     }
+
+    return res;
+}
     
     private int[] getErrorStates() {
-        return new int[0];
+
+        ArrayList<Integer> errores = new ArrayList<>();
+
+        for (int estado : grafo.keySet()) {
+
+            boolean esError = true;
+
+            for (String s : alfabeto) {
+                int destino = grafo.get(estado).get(s);
+
+                if (destino != estado) {
+                    esError = false;
+                    break;
+                }
+            }
+
+            if (esError) {
+                errores.add(estado);
+            }
+        }
+
+        // convertir a arreglo
+        int[] res = new int[errores.size()];
+        for (int i = 0; i < errores.size(); i++) {
+            res[i] = errores.get(i);
+        }
+
+        return res;
     }
     
     // Implemente los metodos que desee a partir de aqui
