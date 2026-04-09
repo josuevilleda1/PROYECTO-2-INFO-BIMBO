@@ -70,7 +70,7 @@ public class AFD {
 
     int n = grafo.size();
 
-    // 🔹 1. crear grupos iniciales
+
     ArrayList<Estados> grupos = new ArrayList<>();
 
     Estados finales = new Estados();

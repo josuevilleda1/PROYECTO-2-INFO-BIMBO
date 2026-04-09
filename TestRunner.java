@@ -21,6 +21,7 @@ public class TestRunner {
         System.out.println("2) GRafos creados");
         System.out.println("3) busqueda de AFD");
         System.out.println("4) AFD MIN");
+        System.out.println("5) ToString");
         System.out.println("0) Salir");
     }
 
@@ -111,7 +112,15 @@ public class TestRunner {
                         }
                         pausa(scanner);
                         break;
-                
+
+                    case 5:
+                        System.out.println("--- SERIALIZACIÓN DEL AFD (toString) ---");
+                        pruebaAFD = new AFD(rutaAFD);
+                        System.out.println(pruebaAFD.toString());
+                        
+                        pausa(scanner);
+                        break;
+                    
                 default:
                     System.out.println("Opción no implementada aún.");
                     pausa(scanner);
